@@ -7,13 +7,14 @@ const logHeader = "[" + pkgInfo.name + "]";
 const mosquitto = require("mqtt");
 const mqtt = require("./mqtt_lib");
 
-const ip = "43.201.54.39";
+const ip = "3.34.50.139";
 
 var obj = undefined;
 var device_func = undefined;
 
 service.register("control", function(message){
-    setTimeout(() => luna.toast("Okay"), 100);
+    setTimeout(() => luna.toast("예약이 설정되었습니다"), 100);
+    luna.tts("예약이 설정되었습니다!");
     device_func = obj.control.device + " " + obj.control.func + "!";
     var url = "luna://com.actest.app.service/reservation";
     luna.createActivity(url, obj.time.start);
@@ -21,13 +22,14 @@ service.register("control", function(message){
 
 service.register("reservation", function(message){
     luna.toast(device_func);
+    luna.tts(device_func);
     mqtt.connect(ip);
     var level;
     if(obj.control.func == "on"){
         level = "5";
     }
     else if (obj.control.func == "off"){
-        level = "0";
+        level = "1";
     }
     mqtt.publish("control/" + obj.control.device, level);
     console.log("control/" + obj.control.device, level);
